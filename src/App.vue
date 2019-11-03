@@ -1,28 +1,35 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <img alt="Vue logo" src="./assets/logo.png" />
+    <MainView>
+      <CanvasImage :src="img" />
+    </MainView>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import MainView from "./components/MainView/MainView";
+import CanvasImage from "./components/CanvasView/CanvasImage";
 
 export default {
-  name: 'app',
+  name: "app",
+  data: () => {
+    return {
+      img: require("@/assets/logo.png")
+    };
+  },
   components: {
-    HelloWorld
+    MainView,
+    CanvasImage
   }
-}
+};
 </script>
 
-<style>
+<style lang="scss">
+body {
+  margin: 0;
+  padding: 0;
+}
 #app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
 }
 </style>
