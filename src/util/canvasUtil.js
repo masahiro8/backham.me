@@ -1,7 +1,6 @@
 // import * as _ from 'lodash';
 const fitRect = (elmRect, imgRect) => {
   const rate = elmRect.width / imgRect.width;
-  // console.log(rate);
   return {
     x: 0,
     y: 0,

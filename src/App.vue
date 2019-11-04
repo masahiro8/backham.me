@@ -1,6 +1,5 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png" />
     <MainView>
       <CanvasImage :src="img" />
     </MainView>
@@ -15,7 +14,7 @@ export default {
   name: "app",
   data: () => {
     return {
-      img: require("@/assets/logo.png")
+      img: require("@/assets/vrmonkey_tran.png")
     };
   },
   components: {
