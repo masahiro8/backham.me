@@ -1,6 +1,6 @@
-import * as _ from 'lodash';
-export const _grayscale = (ctx, _src, rect, n) => {
-  let src = _src.getImageData(0, 0, rect.width, rect.height);
+import * as _ from "lodash";
+export const _grayscale = (ctx, src_ctx, rect, n) => {
+  let src = src_ctx.getImageData(0, 0, rect.width, rect.height);
   let dst = ctx.createImageData(rect.width, rect.height);
   let colors = [];
   for (let i = 0; i < src.data.length; i += 4) {
@@ -10,6 +10,7 @@ export const _grayscale = (ctx, _src, rect, n) => {
         0.0722 * src.data[i + 2]) /
       3;
     // let y = parseInt((src.data[i] + src.data[i + 1] + src.data[i + 2]) / 3);
+    // console.log("y = ", y);
     y = parseInt(y, n);
     let rate = y * (n / 255);
     y = 255 * rate.toFixed(1);
@@ -21,6 +22,6 @@ export const _grayscale = (ctx, _src, rect, n) => {
   }
 
   //colorsの最大と最小
-  console.log('colors = ', _.max(colors), _.min(colors));
+  console.log("colors = ", _.max(colors), _.min(colors));
   return dst;
 };

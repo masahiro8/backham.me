@@ -9,7 +9,7 @@ const fitRect = (elmRect, imgRect) => {
   };
 };
 
-const setImage = (frame, canvas, path) => {
+const getImage = (frame, path) => {
   return new Promise(resolved => {
     const img = new Image();
     img.onload = () => {
@@ -25,4 +25,4 @@ const setImage = (frame, canvas, path) => {
   });
 };
 
-export { setImage };
+export { getImage };

@@ -1,34 +1,17 @@
 <template>
   <div ref="frame" class="canvasImage">
-    <canvas
-      class="canvas"
-      ref="shadow"
-      :width="getCanvasSize().width"
-      :height="getCanvasSize().height"
-      style="visibility:hidden"
-    ></canvas>
-    <canvas
-      class="canvas"
-      ref="canvas"
-      :width="getCanvasSize().width"
-      :height="getCanvasSize().height"
-    ></canvas>
+    <canvas class="canvas" ref="canvas" :width="getCanvasWidth" :height="getCanvasHeight"></canvas>
   </div>
 </template>
 <script>
 import * as _ from "lodash";
-import { setImage } from "../../util/canvasUtil";
-import { Animate } from "../../effects/Effects";
+import { getImage } from "../../util/canvasUtil";
 
-const colors = [
-  "ffff00",
-  "ff0000",
-  "0000ff",
-  "ff00ff",
-  "00ffff",
-  "000000",
-  "ff8800"
-];
+const config = {
+  rotate: 20,
+  tile: { x: 3, y: 3 }
+};
+
 export default {
   data: () => {
     return {
@@ -36,16 +19,21 @@ export default {
       canvasData: { width: 300, height: 300 }
     };
   },
+
   props: {
-    src: String
+    src: String,
+    effect: Object
   },
+
   mounted() {
     this.init();
-    this.setImage();
-    setTimeout(() => {
-      const col = colors[Math.floor(Math.random() * colors.length)];
-      this.animate().Color(col);
-    }, 100);
+    this.setTile(config.tile, () => {
+      this.$emit("setCanvasRef", this.$refs.canvas);
+      this.$refs.canvasImage.style.transform = "scale(1.2)";
+    });
+    // this.setImage(() => {
+    //   this.$emit("setCanvasRef", this.$refs.canvas);
+    // });
   },
 
   methods: {
@@ -53,39 +41,12 @@ export default {
       let timer;
       window.addEventListener("resize", () => {
         clearTimeout(timer);
-        timer = setTimeout(() => {
-          this.setImage();
-          setTimeout(() => {
-            const col = colors[Math.floor(Math.random() * colors.length)];
-            this.animate().Color(col);
-          });
-        }, 500);
+        timer = setTimeout(() => {}, 300);
       });
-      // document.addEventListener("scroll", () => {
-      //   clearTimeout(timer);
-      //   timer = setTimeout(() => {
-      //     this.setImage();
-      //     setTimeout(() => {
-      //       const col = colors[Math.floor(Math.random() * colors.length)];
-      //       this.animate().Color(col);
-      //     });
-      //   }, 500);
-      // });
     },
+    async resizeCanvas() {
+      this.imageData = await getImage(this.$refs.frame, this.src);
 
-    getCanvasSize() {
-      return {
-        width: this.canvasData.width + "px",
-        height: this.canvasData.height + "px"
-      };
-    },
-
-    async resize() {
-      this.imageData = await setImage(
-        this.$refs.frame,
-        this.$refs.canvas,
-        this.src
-      );
       //canvasのサイズを変更
       let size = _.cloneDeep(this.canvasData);
       size.width = this.imageData.fit.width;
@@ -93,12 +54,46 @@ export default {
       this.canvasData = size;
     },
 
-    async setImage() {
-      this.imageData = await setImage(
-        this.$refs.frame,
-        this.$refs.canvas,
-        this.src
-      );
+    async setTile(xy, callback) {
+      this.imageData = await getImage(this.$refs.frame, this.src);
+
+      //canvasのサイズを変更
+      let size = _.cloneDeep(this.canvasData);
+      size.width = this.imageData.fit.width;
+      size.height = this.imageData.fit.height;
+      this.canvasData = size;
+
+      this.$nextTick(() => {
+        const _width = this.$refs.canvas.width / xy.x;
+        const _height = this.$refs.canvas.height / xy.y;
+
+        //main
+        const ctx = this.$refs.canvas.getContext("2d");
+        ctx.clearRect(0, 0, this.$refs.canvas.width, this.$refs.canvas.height);
+        ctx.rotate((config.rotate * Math.PI) / 180);
+        ctx.translate(
+          this.$refs.canvas.width / 7,
+          -this.$refs.canvas.height / 2
+        );
+        // ctx.translate(-200 / 2, -200 / 2);
+        ctx.save();
+        for (let y = 0; y < xy.y; y++) {
+          for (let x = 0; x < xy.x; x++) {
+            ctx.drawImage(
+              this.imageData.img,
+              _width * x,
+              _height * y,
+              _width,
+              _height
+            );
+          }
+        }
+        ctx.restore();
+        callback();
+      });
+    },
+    async setImage(callback) {
+      this.imageData = await getImage(this.$refs.frame, this.src);
 
       //canvasのサイズを変更
       let size = _.cloneDeep(this.canvasData);
@@ -119,49 +114,26 @@ export default {
           this.imageData.fit.height
         );
         ctx.restore();
-
-        //shadow
-        const src = this.$refs.shadow.getContext("2d");
-        src.clearRect(0, 0, this.$refs.shadow.width, this.$refs.shadow.height);
-        src.save();
-        src.drawImage(
-          this.imageData.img,
-          0,
-          0,
-          this.imageData.fit.width,
-          this.imageData.fit.height
-        );
-        src.restore();
+        callback();
       });
+    }
+  },
+  computed: {
+    getCanvasWidth() {
+      return this.canvasData.width + "px";
     },
-
-    animate() {
-      const ctx = this.$refs.canvas.getContext("2d");
-      const src = this.$refs.shadow.getContext("2d");
-      const rect = this.$refs.canvas.getBoundingClientRect();
-      const Grayscale = () => {
-        Animate(ctx, rect)
-          .HorizontalDraw(20, 10)
-          .Grayscale(src);
-      };
-      const Color = col => {
-        Animate(ctx, rect)
-          .HorizontalDraw(200, 1)
-          .Color(src, col);
-      };
-      return {
-        Grayscale,
-        Color
-      };
+    getCanvasHeight() {
+      return this.canvasData.height + "px";
     }
   }
 };
 </script>
 <style lang="scss" scoped>
 .canvasImage {
-  position: relative;
-  width: 100%;
-  height: 100%;
+  position: absolute;
+  width: 100vw;
+  height: 100vh;
+  z-index: 1;
   canvas {
     display: block;
     position: absolute;
