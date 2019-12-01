@@ -1,12 +1,17 @@
 import * as _ from "lodash";
-import { wait } from "../util";
 
-export const colorNoise = (ctx, src_ctx, rect, THRESHOLD) => {
-  let src = src_ctx.getImageData(0, 0, rect.width, rect.height);
-  let dst = ctx.createImageData(rect.width, rect.height);
+export const colorNoise = () => {
+  let ctx;
+  let src;
+  let dst;
+  let rect;
   let forceRelease = false; //強制停止
 
-  const init = () => {
+  const init = (_ctx, src_ctx, _rect, THRESHOLD) => {
+    ctx = _ctx;
+    src = src_ctx.getImageData(0, 0, _rect.width, _rect.height);
+    dst = ctx.createImageData(_rect.width, _rect.height);
+    rect = _rect;
     forceRelease = false;
   };
 

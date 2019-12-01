@@ -8,7 +8,7 @@ import * as _ from "lodash";
 import { getImage } from "../../util/canvasUtil";
 
 const config = {
-  rotate: 20,
+  rotate: 0,
   tile: { x: 3, y: 3 }
 };
 
@@ -70,11 +70,13 @@ export default {
         //main
         const ctx = this.$refs.canvas.getContext("2d");
         ctx.clearRect(0, 0, this.$refs.canvas.width, this.$refs.canvas.height);
-        ctx.rotate((config.rotate * Math.PI) / 180);
-        ctx.translate(
-          this.$refs.canvas.width / 7,
-          -this.$refs.canvas.height / 2
-        );
+        if (config.rotate) {
+          ctx.rotate((config.rotate * Math.PI) / 180);
+          ctx.translate(
+            this.$refs.canvas.width / 7,
+            -this.$refs.canvas.height / 2
+          );
+        }
         // ctx.translate(-200 / 2, -200 / 2);
         ctx.save();
         for (let y = 0; y < xy.y; y++) {

@@ -1,9 +1,19 @@
 import * as _ from "lodash";
 import { scroller } from "./interection/scroll";
+
+//ここからエフェクト
 import { colorNoise } from "./components/Effecter/Effects/ColorNoise";
+import { PixelSkewed } from "./components/Effecter/Effects/PixelSkewed";
+
+//スタイル系エフェクト
 import { setStyle } from "./components/Effecter/Effects/Style";
 
 const scale = Math.random(1) + 1;
+
+//エフェクタ作成
+const pxlSkw = PixelSkewed();
+const colNse = colorNoise();
+
 /**
  * ここにスクロールイベントを登録していく
  */
@@ -13,7 +23,7 @@ const events = [
     from: 100,
     to: 500,
     effect: ({ refs, top, value }) => {
-      colorNoise(refs.ctx, refs.ctx, refs.rect, 128).scroll({
+      colNse.scroll({
         value,
         from: 100,
         to: 500
@@ -25,7 +35,7 @@ const events = [
     from: 500,
     to: 1000,
     effect: ({ refs, top, value }) => {
-      colorNoise(refs.ctx, refs.ctx, refs.rect, 128).loop({
+      colNse.loop({
         value,
         from: 500,
         to: 1000
@@ -44,6 +54,17 @@ const events = [
         toVal: 1.2
       }).scale({ value });
     }
+  },
+  {
+    from: 1000,
+    to: 2000,
+    effect: ({ refs, top, value }) => {
+      pxlSkw.scroll({
+        value,
+        from: 1000,
+        to: 2000
+      });
+    }
   }
 ];
 
@@ -59,6 +80,10 @@ export const sequence = ref => {
     rect,
     dst
   };
+
+  //エフェエクトの初期化
+  colNse.init(ctx, ctx, rect, 128);
+  pxlSkw.init(ctx, ctx, rect, 128);
 
   //イベントを実行
   const delivereEvent = _param => {
