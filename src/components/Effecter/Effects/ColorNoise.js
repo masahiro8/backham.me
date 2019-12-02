@@ -6,13 +6,16 @@ export const colorNoise = () => {
   let dst;
   let rect;
   let forceRelease = false; //強制停止
+  let endFlag = false; //終了フラグ
+  let THRESHOLD;
 
-  const init = (_ctx, src_ctx, _rect, THRESHOLD) => {
+  const init = (_ctx, src_ctx, _rect, _THRESHOLD) => {
     ctx = _ctx;
     src = src_ctx.getImageData(0, 0, _rect.width, _rect.height);
     dst = ctx.createImageData(_rect.width, _rect.height);
     rect = _rect;
     forceRelease = false;
+    THRESHOLD = _THRESHOLD;
   };
 
   const setColor = (z, i, _rgb) => {
@@ -35,6 +38,9 @@ export const colorNoise = () => {
         return true;
       }
       if (from < rect.height && top >= rect.height) {
+        if (!endFlag) {
+          release();
+        }
         return;
       }
       for (let y = 0; y < rect.height; y++) {

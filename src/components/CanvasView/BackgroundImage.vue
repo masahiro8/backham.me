@@ -34,11 +34,6 @@ export default {
   methods: {
     setBackgroundColor(value) {
       if (this.$refs.bg) {
-        console.log(
-          "bg ",
-          `rgb(${value.r},${value.g},${value.b})`,
-          this.$refs.bg
-        );
         const rect = this.$refs.bg.getBoundingClientRect();
         this.style = `background-color:rgb(${value.r},${value.g},${value.b});`;
       }

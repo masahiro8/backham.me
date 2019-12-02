@@ -25,15 +25,14 @@ export default {
     effect: Object
   },
 
-  mounted() {
+  async mounted() {
     this.init();
+    await this.resizeCanvas();
+    // this.$emit("setCanvasRef", this.$refs.canvas);
     this.setTile(config.tile, () => {
       this.$emit("setCanvasRef", this.$refs.canvas);
-      this.$refs.canvasImage.style.transform = "scale(1.2)";
+      // this.$refs.canvasImage.style.transform = "scale(1.2)";
     });
-    // this.setImage(() => {
-    //   this.$emit("setCanvasRef", this.$refs.canvas);
-    // });
   },
 
   methods: {
@@ -44,24 +43,23 @@ export default {
         timer = setTimeout(() => {}, 300);
       });
     },
-    async resizeCanvas() {
-      this.imageData = await getImage(this.$refs.frame, this.src);
 
-      //canvasのサイズを変更
-      let size = _.cloneDeep(this.canvasData);
-      size.width = this.imageData.fit.width;
-      size.height = this.imageData.fit.height;
-      this.canvasData = size;
+    resizeCanvas() {
+      return new Promise(async resolved => {
+        this.imageData = await getImage(this.$refs.frame, this.src);
+
+        //canvasのサイズを変更
+        let size = _.cloneDeep(this.canvasData);
+        size.width = this.imageData.fit.width;
+        size.height = this.imageData.fit.height;
+        this.canvasData = size;
+
+        resolved();
+      });
     },
 
     async setTile(xy, callback) {
       this.imageData = await getImage(this.$refs.frame, this.src);
-
-      //canvasのサイズを変更
-      let size = _.cloneDeep(this.canvasData);
-      size.width = this.imageData.fit.width;
-      size.height = this.imageData.fit.height;
-      this.canvasData = size;
 
       this.$nextTick(() => {
         const _width = this.$refs.canvas.width / xy.x;
@@ -93,33 +91,9 @@ export default {
         ctx.restore();
         callback();
       });
-    },
-    async setImage(callback) {
-      this.imageData = await getImage(this.$refs.frame, this.src);
-
-      //canvasのサイズを変更
-      let size = _.cloneDeep(this.canvasData);
-      size.width = this.imageData.fit.width;
-      size.height = this.imageData.fit.height;
-      this.canvasData = size;
-
-      this.$nextTick(() => {
-        //main
-        const ctx = this.$refs.canvas.getContext("2d");
-        ctx.clearRect(0, 0, this.$refs.canvas.width, this.$refs.canvas.height);
-        ctx.save();
-        ctx.drawImage(
-          this.imageData.img,
-          0,
-          0,
-          this.imageData.fit.width,
-          this.imageData.fit.height
-        );
-        ctx.restore();
-        callback();
-      });
     }
   },
+
   computed: {
     getCanvasWidth() {
       return this.canvasData.width + "px";
