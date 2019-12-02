@@ -14,14 +14,15 @@ const scale = Math.random(1) + 1;
 
 //エフェクタ作成
 const dwImg = drawImage();
-const pxlSkw = PixelSkewed();
-const colNse = colorNoise();
-const lnSkw = LineSkewed(true);
+const pxlSkw = PixelSkewed({ isColor: false });
+const colNse = colorNoise({ isColor: false });
+const lnSkw = LineSkewed({ isRandom: true });
 
 /**
  * ここにスクロールイベントを登録していく
  */
 const events = [
+  //タイリング
   {
     from: 1,
     to: 100,
@@ -32,6 +33,7 @@ const events = [
       });
     }
   },
+  //タイリング
   {
     from: 101,
     to: 200,
@@ -42,6 +44,7 @@ const events = [
       });
     }
   },
+  //タイリング
   {
     from: 201,
     to: 300,
@@ -67,42 +70,190 @@ const events = [
   //ノイズ
   {
     from: 500,
-    to: 1000,
+    to: 700,
     effect: ({ refs, top, value }) => {
       colNse.loop({
         value,
         from: 500,
-        to: 1000
+        to: 700
+      });
+    }
+  },
+
+  //フェードアウト
+  {
+    from: 700,
+    to: 750,
+    effect: ({ refs, top, value }) => {
+      setStyle({
+        elem: refs.ref,
+        from: 700,
+        to: 750,
+        fromVal: 1,
+        toVal: 0
+      }).opacity({ value });
+    }
+  },
+  //フェードイン
+  {
+    from: 750,
+    to: 800,
+    effect: ({ refs, top, value }) => {
+      setStyle({
+        elem: refs.ref,
+        from: 750,
+        to: 800,
+        fromVal: 0,
+        toVal: 1
+      }).opacity({ value });
+    }
+  },
+  //タイリング
+  {
+    from: 750,
+    to: 800,
+    effect: ({ refs, top, value }) => {
+      dwImg.setTile({
+        path: require("@/assets/vrmonkey_tran.png"),
+        tile: { x: 1, y: 1 }
+      });
+    }
+  },
+  //タイリング
+  {
+    from: 800,
+    to: 900,
+    effect: ({ refs, top, value }) => {
+      dwImg.setTile({
+        path: require("@/assets/vrmonkey_tran.png"),
+        tile: { x: 2, y: 2 }
+      });
+    }
+  },
+  //タイリング
+  {
+    from: 900,
+    to: 1000,
+    effect: ({ refs, top, value }) => {
+      dwImg.setTile({
+        path: require("@/assets/vrmonkey_tran.png"),
+        tile: { x: 3, y: 3 }
+      });
+    }
+  },
+  // ノイズライン
+  {
+    from: 800,
+    to: 1200,
+    effect: ({ refs, top, value }) => {
+      lnSkw.scroll({
+        value,
+        from: 800,
+        to: 900
+      });
+    }
+  },
+  // ノイズライン
+  {
+    from: 1000,
+    to: 1800,
+    effect: ({ refs, top, value }) => {
+      lnSkw.scroll({
+        value,
+        from: 1000,
+        to: 1800
+      });
+    }
+  },
+  //フェードアウト
+  {
+    from: 1800,
+    to: 1850,
+    effect: ({ refs, top, value }) => {
+      setStyle({
+        elem: refs.ref,
+        from: 1800,
+        to: 1850,
+        fromVal: 1,
+        toVal: 0
+      }).opacity({ value });
+    }
+  },
+  //フェードイン
+  {
+    from: 1850,
+    to: 1900,
+    effect: ({ refs, top, value }) => {
+      setStyle({
+        elem: refs.ref,
+        from: 1850,
+        to: 1900,
+        fromVal: 0,
+        toVal: 1
+      }).opacity({ value });
+    }
+  },
+  //タイリング
+  {
+    from: 1850,
+    to: 1900,
+    effect: ({ refs, top, value }) => {
+      dwImg.setTile({
+        path: require("@/assets/vrmonkey_tran.png"),
+        tile: { x: 1, y: 1 }
+      });
+    }
+  },
+  //タイリング
+  {
+    from: 1900,
+    to: 2000,
+    effect: ({ refs, top, value }) => {
+      dwImg.setTile({
+        path: require("@/assets/vrmonkey_tran.png"),
+        tile: { x: 2, y: 2 }
+      });
+    }
+  },
+  //タイリング
+  {
+    from: 2000,
+    to: 2100,
+    effect: ({ refs, top, value }) => {
+      dwImg.setTile({
+        path: require("@/assets/vrmonkey_tran.png"),
+        tile: { x: 3, y: 3 }
       });
     }
   },
   {
     from: 200,
-    to: 1200,
+    to: 2000,
     effect: ({ refs, top, value }) => {
       setStyle({
         elem: refs.ref,
         from: 200,
-        to: 1200,
-        fromVal: 1.0,
-        toVal: 1.2
-      }).scale({ value });
+        to: 2000,
+        fromVal: 0,
+        toVal: -100
+      }).translateY({ value });
     }
   },
+  //ノイズ拡散
   {
-    from: 1000,
-    to: 2000,
+    from: 2000,
+    to: 3000,
     effect: ({ refs, top, value }) => {
-      lnSkw.scroll({
+      pxlSkw.scroll({
         value,
-        from: 1000,
-        to: 2000
+        from: 2000,
+        to: 3000
       });
     }
   },
   {
-    from: 1500,
-    to: 2000,
+    from: 3000,
+    to: 4000,
     effect: ({ refs, top, value }) => {
       setStyle({
         elem: refs.ref,

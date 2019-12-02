@@ -1,6 +1,6 @@
 import * as _ from "lodash";
 
-export const colorNoise = () => {
+export const colorNoise = ({ isColor }) => {
   let ctx;
   let src;
   let dst;
@@ -8,6 +8,7 @@ export const colorNoise = () => {
   let forceRelease = false; //強制停止
   let endFlag = false; //終了フラグ
   let THRESHOLD;
+  let isColorNoise = isColor;
 
   const init = (_ctx, src_ctx, _rect, _THRESHOLD) => {
     ctx = _ctx;
@@ -31,6 +32,23 @@ export const colorNoise = () => {
     dst.data[i + 3] = src.data[i + 3];
   };
 
+  const getNoise = _isColor => {
+    if (_isColor) {
+      return {
+        r: Math.floor(Math.random() * 250),
+        g: Math.floor(Math.random() * 250),
+        b: Math.floor(Math.random() * 250)
+      };
+    } else {
+      const col = Math.floor(Math.random() * 250);
+      return {
+        r: col,
+        g: col,
+        b: col
+      };
+    }
+  };
+
   const scroll = ({ value, from, to }) => {
     const rate = rect.height / (to - from);
     const draw = () => {
@@ -49,11 +67,7 @@ export const colorNoise = () => {
           let z = (src.data[i] + src.data[i + 1] + src.data[i + 2]) / 3;
 
           if (y < value * rate) {
-            const _rgb = {
-              r: Math.floor(Math.random() * 250),
-              g: Math.floor(Math.random() * 250),
-              b: Math.floor(Math.random() * 250)
-            };
+            const _rgb = getNoise(isColorNoise);
             setColor(z, i, _rgb);
           } else {
             const _rgb = {
@@ -83,11 +97,7 @@ export const colorNoise = () => {
         for (let x = 0; x < rect.width; x++) {
           const i = Math.floor(y * (rect.width * 4) + x * 4);
           let z = (src.data[i] + src.data[i + 1] + src.data[i + 2]) / 3;
-          const _rgb = {
-            r: Math.floor(Math.random() * 250),
-            g: Math.floor(Math.random() * 250),
-            b: Math.floor(Math.random() * 250)
-          };
+          const _rgb = getNoise(isColorNoise);
           setColor(z, i, _rgb);
         }
       }

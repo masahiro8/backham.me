@@ -1,6 +1,6 @@
 import * as _ from "lodash";
 
-export const LineSkewed = _isRandom => {
+export const LineSkewed = ({ isRandom }) => {
   let ctx;
   let src;
   let dst;
@@ -8,7 +8,7 @@ export const LineSkewed = _isRandom => {
   let forceRelease = false; //強制停止
   let pixels = [];
   let THRESHOLD;
-  let isRandom = _isRandom || false;
+  let isRandomNoise = isRandom;
   let rands = [];
 
   const init = (_ctx, src_ctx, _rect, _THRESHOLD) => {
@@ -64,7 +64,7 @@ export const LineSkewed = _isRandom => {
             // drawPixel(i, i);
             //ランダム値
             if (!rands[i]) {
-              rands[i] = isRandom ? Math.floor(Math.random() * 10) : 1;
+              rands[i] = isRandomNoise ? Math.floor(Math.random() * 10) : 1;
             }
             const s = i + Math.floor((value * rands[i]) / 10) * 4;
             for (let n = i; n < s; n += 4) {

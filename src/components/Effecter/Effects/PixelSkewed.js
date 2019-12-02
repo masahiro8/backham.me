@@ -1,6 +1,6 @@
 import * as _ from "lodash";
 
-export const PixelSkewed = () => {
+export const PixelSkewed = ({ isColor }) => {
   let ctx;
   let src;
   let dst;
@@ -8,6 +8,7 @@ export const PixelSkewed = () => {
   let forceRelease = false; //強制停止
   let pixels = [];
   let THRESHOLD;
+  let isColorNoise = isColor;
 
   const init = (_ctx, src_ctx, _rect, _THRESHOLD) => {
     ctx = _ctx;
@@ -27,11 +28,7 @@ export const PixelSkewed = () => {
           const r = Math.random() * 1 + 1; //半径初期値
           const s = Math.random() * 2; //回転速度初期値
           const a = src.data[i + 3];
-          const rgb = {
-            r: Math.floor(Math.random() * 250),
-            g: Math.floor(Math.random() * 250),
-            b: Math.floor(Math.random() * 250)
-          };
+          const rgb = getNoise(isColorNoise);
           pixels.push({ index: i, x, y, rr, r, s, a, rgb });
         }
       }
@@ -47,6 +44,23 @@ export const PixelSkewed = () => {
         dst.data[i + 2] = 255;
         dst.data[i + 3] = 0;
       }
+    }
+  };
+
+  const getNoise = _isColor => {
+    if (_isColor) {
+      return {
+        r: Math.floor(Math.random() * 250),
+        g: Math.floor(Math.random() * 250),
+        b: Math.floor(Math.random() * 250)
+      };
+    } else {
+      const col = Math.floor(Math.random() * 250);
+      return {
+        r: col,
+        g: col,
+        b: col
+      };
     }
   };
 

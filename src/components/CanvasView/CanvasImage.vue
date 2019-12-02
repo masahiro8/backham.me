@@ -6,17 +6,19 @@
 <script>
 import * as _ from "lodash";
 import { getImage } from "../../util/canvasUtil";
+import { gcd } from "../../util/gcd";
 
 const config = {
-  rotate: 0,
-  tile: { x: 3, y: 3 }
+  rotate: 0
 };
 
 export default {
   data: () => {
     return {
       imageData: null,
-      canvasData: { width: 300, height: 300 }
+      canvasData: { width: 300, height: 300 },
+      tile: { x: 1, y: 3 },
+      edge: Math.floor(Math.random() * 100) + 200
     };
   },
 
@@ -28,10 +30,8 @@ export default {
   async mounted() {
     this.init();
     await this.resizeCanvas();
-    // this.$emit("setCanvasRef", this.$refs.canvas);
-    this.setTile(config.tile, () => {
+    this.setTile(300, () => {
       this.$emit("setCanvasRef", this.$refs.canvas);
-      // this.$refs.canvasImage.style.transform = "scale(1.2)";
     });
   },
 
@@ -43,39 +43,42 @@ export default {
         timer = setTimeout(() => {}, 300);
       });
     },
-
     resizeCanvas() {
       return new Promise(async resolved => {
         this.imageData = await getImage(this.$refs.frame, this.src);
+        console.log("window", window.innerWidth, window.innerHeight);
+
+        //タイル数
+        const xy = {
+          x: Math.ceil(window.innerWidth / this.edge),
+          y: Math.ceil(window.innerHeight / this.edge)
+        };
 
         //canvasのサイズを変更
         let size = _.cloneDeep(this.canvasData);
-        size.width = this.imageData.fit.width;
-        size.height = this.imageData.fit.height;
+        size.width = window.innerWidth;
+        size.height = this.edge * xy.y;
         this.canvasData = size;
 
         resolved();
       });
     },
 
-    async setTile(xy, callback) {
+    async setTile(edge, callback) {
       this.imageData = await getImage(this.$refs.frame, this.src);
 
       this.$nextTick(() => {
-        const _width = this.$refs.canvas.width / xy.x;
-        const _height = this.$refs.canvas.height / xy.y;
+        const _width = edge;
+        const _height = edge;
+
+        const xy = {
+          x: Math.ceil(this.$refs.canvas.width / edge),
+          y: Math.ceil(this.$refs.canvas.height / edge)
+        };
 
         //main
         const ctx = this.$refs.canvas.getContext("2d");
         ctx.clearRect(0, 0, this.$refs.canvas.width, this.$refs.canvas.height);
-        if (config.rotate) {
-          ctx.rotate((config.rotate * Math.PI) / 180);
-          ctx.translate(
-            this.$refs.canvas.width / 7,
-            -this.$refs.canvas.height / 2
-          );
-        }
-        // ctx.translate(-200 / 2, -200 / 2);
         ctx.save();
         for (let y = 0; y < xy.y; y++) {
           for (let x = 0; x < xy.x; x++) {
