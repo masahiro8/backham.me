@@ -6,6 +6,7 @@ import { drawImage } from "./components/Effecter/Effects/DrawImage";
 import { colorNoise } from "./components/Effecter/Effects/ColorNoise";
 import { Color } from "./components/Effecter/Effects/Color";
 import { PixelSkewed } from "./components/Effecter/Effects/PixelSkewed";
+import { PixelSkewed8 } from "./components/Effecter/Effects/PixelSkewed8";
 import { LineSkewed } from "./components/Effecter/Effects/LineSkewed";
 import { LineWave } from "./components/Effecter/Effects/LineWave";
 import { Stay } from "./components/Effecter/Effects/Stay";
@@ -18,6 +19,7 @@ const scale = Math.random(1) + 1;
 //エフェクタ作成
 const dwImg = drawImage();
 const pxlSkw = PixelSkewed({ isColor: false });
+const pxlSkw8 = PixelSkewed8({ isColor: false });
 const colNse = colorNoise({ isColor: false });
 const col = Color();
 const lnSkw = LineSkewed({ isRandom: true });
@@ -64,18 +66,6 @@ const events = [
       });
     }
   },
-  //ノイズ
-  // {
-  //   from: 1300,
-  //   to: 1400,
-  //   effect: ({ refs, top, value }) => {
-  //     colNse.loop({
-  //       value,
-  //       from: 1300,
-  //       to: 1400
-  //     });
-  //   }
-  // },
 
   //フェードアウト
   {
@@ -157,19 +147,20 @@ const events = [
       }).opacity({ value });
     }
   },
-  {
-    from: 200,
-    to: 3000,
-    effect: ({ refs, top, value }) => {
-      setStyle({
-        elem: refs.ref,
-        from: 200,
-        to: 3000,
-        fromVal: 0,
-        toVal: -100
-      }).translateY({ value });
-    }
-  },
+  //スクロール
+  // {
+  //   from: 200,
+  //   to: 3000,
+  //   effect: ({ refs, top, value }) => {
+  //     setStyle({
+  //       elem: refs.ref,
+  //       from: 200,
+  //       to: 3000,
+  //       fromVal: 0,
+  //       toVal: -100
+  //     }).translateY({ value });
+  //   }
+  // },
   //固定
   {
     from: 3000,
@@ -182,26 +173,40 @@ const events = [
       });
     }
   },
-  //ノイズ拡散
+  //ノイズ拡散８のじ
   {
     from: 3200,
     to: 4500,
     effect: ({ refs, top, value }) => {
-      pxlSkw.scroll({
+      pxlSkw8.scroll({
         value,
         from: 3200,
-        to: 4500
+        to: 4500,
+        sp: 20
       });
     }
   },
+  //ノイズ拡散
   {
-    from: 4000,
-    to: 5000,
+    from: 4500,
+    to: 6000,
+    effect: ({ refs, top, value }) => {
+      pxlSkw.scroll({
+        value,
+        from: 4500,
+        to: 6000
+      });
+    }
+  },
+  //フェードアウト
+  {
+    from: 5000,
+    to: 6000,
     effect: ({ refs, top, value }) => {
       setStyle({
         elem: refs.ref,
-        from: 1500,
-        to: 2000,
+        from: 5000,
+        to: 6000,
         fromVal: 1.0,
         toVal: 0
       }).opacity({ value });
@@ -227,6 +232,7 @@ export const CanvasSeq = ref => {
   colNse.init(ctx, ctx, rect, 128);
   col.init(ctx, ctx, rect, 128);
   pxlSkw.init(ctx, ctx, rect, 128);
+  pxlSkw8.init(ctx, ctx, rect, 128);
   lnSkw.init(ctx, ctx, rect, 128);
   lnWve.init(ctx, ctx, rect, 128);
   sty.init(ctx, ctx, rect, 128);

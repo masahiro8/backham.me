@@ -44,6 +44,11 @@ export const LineSkewed = ({ isRandom }) => {
     // return Math.floor(src.data[i - 4] + src.data[i - 3] + src.data[i - 2]) / 3;
   };
 
+  const nextPixel = i => {
+    return src.data[i + 4];
+    // return Math.floor(src.data[i - 4] + src.data[i - 3] + src.data[i - 2]) / 3;
+  };
+
   const scroll = ({ value, from, to }) => {
     clearCanvas();
     const draw = () => {
@@ -64,11 +69,38 @@ export const LineSkewed = ({ isRandom }) => {
             // drawPixel(i, i);
             //ランダム値
             if (!rands[i]) {
-              rands[i] = isRandomNoise ? Math.floor(Math.random() * 10) : 1;
+              rands[i] = isRandomNoise ? Math.floor(Math.random() * 4) : 1;
             }
             const s = i + Math.floor((value * rands[i]) / 10) * 4;
             for (let n = i; n < s; n += 4) {
               drawPixel(i, n);
+            }
+          } else {
+            //着色済みになければ
+            // let _z = (dst.data[i] + dst.data[i + 1] + dst.data[i + 2]) / 3;
+            // if (_z === 255) {
+            //   dst.data[i] = 1;
+            //   dst.data[i + 1] = 1;
+            //   dst.data[i + 2] = 1;
+            //   dst.data[i + 3] = src.data[i + 3];
+            // }
+          }
+        }
+
+        for (let x = rect.width; x > 0; x--) {
+          const i = Math.floor(y * (rect.width * 4) + x * 4);
+          let z = (src.data[i] + src.data[i + 1] + src.data[i + 2]) / 3;
+
+          //黒ピクセルの後の白ピクセル
+          if (src.data[i + 3] > 0 && nextPixel(i) === 0) {
+            // drawPixel(i, i);
+            //ランダム値
+            if (!rands[i]) {
+              rands[i] = isRandomNoise ? Math.floor(Math.random() * 10) : 1;
+            }
+            const s = i - Math.floor((value * rands[i]) / 10) * 4;
+            for (let n = s; n < i; n += 4) {
+              drawPixel(s, n);
             }
           } else {
             //着色済みになければ

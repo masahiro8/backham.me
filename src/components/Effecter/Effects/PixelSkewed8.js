@@ -1,10 +1,9 @@
 import * as _ from "lodash";
 
 /**
- * ピクセル拡散エフェクト
- * @param {*} param0
+ * ピクセルを拡散して8時に回転
  */
-export const PixelSkewed = ({ isColor }) => {
+export const PixelSkewed8 = ({ isColor }) => {
   let ctx;
   let src;
   let dst;
@@ -28,18 +27,23 @@ export const PixelSkewed = ({ isColor }) => {
         const i = Math.floor(y * (rect.width * 4) + x * 4);
         let z = (src.data[i] + src.data[i + 1] + src.data[i + 2]) / 3;
         if (z < THRESHOLD) {
-          const rr = Math.floor(Math.random() * 360); //回転初期値
-          const r = Math.random() * 1 + 1; //半径初期値
+          // const rr = Math.floor(Math.random() * 360); //回転初期値
+          const rr = [90, 270][_.random(1)]; //回転初期値
+          const rx = Math.random() * 50; //半径初期値
+          const ry = Math.floor(Math.random() * 10); //y半径
           const s = Math.random() * 2; //回転速度初期値
           const a = src.data[i + 3];
           const rgb = getNoise(isColorNoise);
-          pixels.push({ index: i, x, y, rr, r, s, a, rgb });
+          pixels.push({ index: i, x, y, rr, rx, ry, s, a, rgb });
         }
       }
     }
   };
-  const scroll = ({ value, from, to }) => {
+
+  const scroll = ({ value, from, to, sp = 50 }) => {
     clearCanvas();
+
+    let radius = 1;
     const draw = () => {
       if (forceRelease) {
         return true;
@@ -50,11 +54,12 @@ export const PixelSkewed = ({ isColor }) => {
 
       //座標計算
       pixels.map(pix => {
-        const rotate = value * pix.s;
-        const radius = value / 5 + pix.r; //半径
+        const rotate = value / sp;
+        const radius_x = pix.rx; //半径
+        const radius_y = pix.ry; //y半径
         const radian = ((pix.rr + rotate) * Math.PI) / 180;
-        const x = Math.floor(radius * Math.cos(radian)) + pix.x;
-        const y = Math.floor(radius * Math.sin(radian)) + pix.y;
+        const x = Math.floor(radius_x * Math.cos(radian)) + pix.x;
+        const y = Math.floor(radius_y * Math.sin(radian + radian)) + pix.y;
         //描画
         const i = Math.floor(y * (rect.width * 4) + x * 4);
         dst.data[i] = pix.rgb.r;
