@@ -1,0 +1,4 @@
+export const OPTIONS = {
+  INTERVAL_SPEED: 30,
+  RANDOM_SPEED: 10
+};

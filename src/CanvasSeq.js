@@ -4,8 +4,11 @@ import { scroller } from "./interection/scroll";
 //ここからエフェクト
 import { drawImage } from "./components/Effecter/Effects/DrawImage";
 import { colorNoise } from "./components/Effecter/Effects/ColorNoise";
+import { Color } from "./components/Effecter/Effects/Color";
 import { PixelSkewed } from "./components/Effecter/Effects/PixelSkewed";
 import { LineSkewed } from "./components/Effecter/Effects/LineSkewed";
+import { LineWave } from "./components/Effecter/Effects/LineWave";
+import { Stay } from "./components/Effecter/Effects/Stay";
 
 //スタイル系エフェクト
 import { setStyle } from "./components/Effecter/Effects/Style";
@@ -16,79 +19,73 @@ const scale = Math.random(1) + 1;
 const dwImg = drawImage();
 const pxlSkw = PixelSkewed({ isColor: false });
 const colNse = colorNoise({ isColor: false });
+const col = Color();
 const lnSkw = LineSkewed({ isRandom: true });
+const lnWve = LineWave({ isColor: false });
+const sty = Stay();
 
 /**
  * ここにスクロールイベントを登録していく
  */
 const events = [
-  //タイリング
   {
-    from: 1,
-    to: 100,
-    effect: ({ refs, top, value }) => {
-      dwImg.setTile({
-        path: require("@/assets/vrmonkey_tran.png"),
-        tile: { x: 1, y: 1 }
-      });
-    }
-  },
-  //タイリング
-  {
-    from: 101,
+    from: 100,
     to: 200,
     effect: ({ refs, top, value }) => {
-      dwImg.setTile({
-        path: require("@/assets/vrmonkey_tran.png"),
-        tile: { x: 2, y: 2 }
+      col.scroll({
+        value,
+        from: 100,
+        to: 200,
+        frgb: { r: 0, g: 200, b: 255 }
       });
     }
   },
-  //タイリング
   {
-    from: 201,
-    to: 300,
+    from: 400,
+    to: 500,
     effect: ({ refs, top, value }) => {
-      dwImg.setTile({
-        path: require("@/assets/vrmonkey_tran.png"),
-        tile: { x: 3, y: 3 }
+      col.reverse({
+        value,
+        from: 400,
+        to: 500,
+        frgb: { r: 0, g: 200, b: 255 }
       });
     }
   },
   //ノイズスクロール
   {
-    from: 100,
-    to: 500,
+    from: 700,
+    to: 1400,
     effect: ({ refs, top, value }) => {
-      colNse.scroll({
+      lnWve.scroll({
         value,
-        from: 100,
-        to: 500
+        from: 700,
+        to: 1400
       });
     }
   },
   //ノイズ
-  {
-    from: 500,
-    to: 700,
-    effect: ({ refs, top, value }) => {
-      colNse.loop({
-        value,
-        from: 500,
-        to: 700
-      });
-    }
-  },
+  // {
+  //   from: 1300,
+  //   to: 1400,
+  //   effect: ({ refs, top, value }) => {
+  //     colNse.loop({
+  //       value,
+  //       from: 1300,
+  //       to: 1400
+  //     });
+  //   }
+  // },
 
   //フェードアウト
   {
-    from: 700,
-    to: 750,
+    from: 1400,
+    to: 1600,
     effect: ({ refs, top, value }) => {
       setStyle({
         elem: refs.ref,
-        from: 700,
-        to: 750,
+        from: 1400,
+        to: 1600,
         fromVal: 1,
         toVal: 0
       }).opacity({ value });
@@ -96,164 +93,110 @@ const events = [
   },
   //フェードイン
   {
-    from: 750,
-    to: 800,
-    effect: ({ refs, top, value }) => {
-      setStyle({
-        elem: refs.ref,
-        from: 750,
-        to: 800,
-        fromVal: 0,
-        toVal: 1
-      }).opacity({ value });
-    }
-  },
-  //タイリング
-  {
-    from: 750,
-    to: 800,
-    effect: ({ refs, top, value }) => {
-      dwImg.setTile({
-        path: require("@/assets/vrmonkey_tran.png"),
-        tile: { x: 1, y: 1 }
-      });
-    }
-  },
-  //タイリング
-  {
-    from: 800,
-    to: 900,
-    effect: ({ refs, top, value }) => {
-      dwImg.setTile({
-        path: require("@/assets/vrmonkey_tran.png"),
-        tile: { x: 2, y: 2 }
-      });
-    }
-  },
-  //タイリング
-  {
-    from: 900,
-    to: 1000,
-    effect: ({ refs, top, value }) => {
-      dwImg.setTile({
-        path: require("@/assets/vrmonkey_tran.png"),
-        tile: { x: 3, y: 3 }
-      });
-    }
-  },
-  // ノイズライン
-  {
-    from: 800,
-    to: 1200,
-    effect: ({ refs, top, value }) => {
-      lnSkw.scroll({
-        value,
-        from: 800,
-        to: 900
-      });
-    }
-  },
-  // ノイズライン
-  {
-    from: 1000,
-    to: 1800,
-    effect: ({ refs, top, value }) => {
-      lnSkw.scroll({
-        value,
-        from: 1000,
-        to: 1800
-      });
-    }
-  },
-  //フェードアウト
-  {
-    from: 1800,
-    to: 1850,
-    effect: ({ refs, top, value }) => {
-      setStyle({
-        elem: refs.ref,
-        from: 1800,
-        to: 1850,
-        fromVal: 1,
-        toVal: 0
-      }).opacity({ value });
-    }
-  },
-  //フェードイン
-  {
-    from: 1850,
+    from: 1600,
     to: 1900,
     effect: ({ refs, top, value }) => {
       setStyle({
         elem: refs.ref,
-        from: 1850,
+        from: 1600,
         to: 1900,
         fromVal: 0,
         toVal: 1
       }).opacity({ value });
     }
   },
-  //タイリング
+  // ノイズライン
   {
-    from: 1850,
-    to: 1900,
+    from: 1800,
+    to: 2400,
     effect: ({ refs, top, value }) => {
-      dwImg.setTile({
-        path: require("@/assets/vrmonkey_tran.png"),
-        tile: { x: 1, y: 1 }
+      lnSkw.scroll({
+        value,
+        from: 1800,
+        to: 2400
       });
     }
   },
-  //タイリング
+  //固定
   {
-    from: 1900,
-    to: 2000,
+    from: 2400,
+    to: 2600,
     effect: ({ refs, top, value }) => {
-      dwImg.setTile({
-        path: require("@/assets/vrmonkey_tran.png"),
-        tile: { x: 2, y: 2 }
+      sty.set({
+        value,
+        from: 2400,
+        to: 2600
       });
     }
   },
-  //タイリング
+  //フェードアウト
   {
-    from: 2000,
-    to: 2100,
+    from: 2200,
+    to: 2400,
     effect: ({ refs, top, value }) => {
-      dwImg.setTile({
-        path: require("@/assets/vrmonkey_tran.png"),
-        tile: { x: 3, y: 3 }
-      });
+      setStyle({
+        elem: refs.ref,
+        from: 2200,
+        to: 2400,
+        fromVal: 1,
+        toVal: 0
+      }).opacity({ value });
+    }
+  },
+  //フェードイン
+  {
+    from: 2400,
+    to: 2700,
+    effect: ({ refs, top, value }) => {
+      setStyle({
+        elem: refs.ref,
+        from: 2400,
+        to: 2700,
+        fromVal: 0,
+        toVal: 1
+      }).opacity({ value });
     }
   },
   {
     from: 200,
-    to: 2000,
+    to: 3000,
     effect: ({ refs, top, value }) => {
       setStyle({
         elem: refs.ref,
         from: 200,
-        to: 2000,
+        to: 3000,
         fromVal: 0,
         toVal: -100
       }).translateY({ value });
     }
   },
+  //固定
+  {
+    from: 3000,
+    to: 3200,
+    effect: ({ refs, top, value }) => {
+      sty.set({
+        value,
+        from: 3000,
+        to: 3200
+      });
+    }
+  },
   //ノイズ拡散
   {
-    from: 2000,
-    to: 3000,
+    from: 3200,
+    to: 4500,
     effect: ({ refs, top, value }) => {
       pxlSkw.scroll({
         value,
-        from: 2000,
-        to: 3000
+        from: 3200,
+        to: 4500
       });
     }
   },
   {
-    from: 3000,
-    to: 4000,
+    from: 4000,
+    to: 5000,
     effect: ({ refs, top, value }) => {
       setStyle({
         elem: refs.ref,
@@ -266,7 +209,7 @@ const events = [
   }
 ];
 
-export const sequence = ref => {
+export const CanvasSeq = ref => {
   let ctx = ref.getContext("2d");
   let rect = ref.getBoundingClientRect();
   let dst = null;
@@ -282,8 +225,11 @@ export const sequence = ref => {
   //エフェエクトの初期化
   dwImg.init(ctx, ctx, rect, 128);
   colNse.init(ctx, ctx, rect, 128);
+  col.init(ctx, ctx, rect, 128);
   pxlSkw.init(ctx, ctx, rect, 128);
   lnSkw.init(ctx, ctx, rect, 128);
+  lnWve.init(ctx, ctx, rect, 128);
+  sty.init(ctx, ctx, rect, 128);
 
   //イベントを実行
   const delivereEvent = _param => {

@@ -3,18 +3,19 @@
     <ContextConsumer :contextKey="['BGCOLOR']" v-slot="{ context }">
       <BackgroundImage :color="bgcolor" />
     </ContextConsumer>
-    <ContextConsumer :contextKey="['EFFECT']" v-slot="{ context }">
-      <CanvasImage :src="img" @setCanvasRef="setCanvasRef" :effetc="context['EFFECT']" />
-    </ContextConsumer>
+    <CanvasImage :src="img" @setCanvasRef="setCanvasRef" />
+    <HtmlView />
   </div>
 </template>
 
 <script>
 import CanvasImage from "./components/CanvasView/CanvasImage";
+import HtmlView from "./components/HtmlView/HtmlView";
 import BackgroundImage from "./components/CanvasView/BackgroundImage";
 import ContextConsumer from "./context/Context";
 import { scroller } from "./interection/scroll";
-import { sequence } from "./sequence";
+import { CanvasSeq } from "./CanvasSeq";
+import { HtmlSeq } from "./HtmlSeq";
 
 export default {
   name: "app",
@@ -27,12 +28,13 @@ export default {
   },
   components: {
     CanvasImage,
+    HtmlView,
     BackgroundImage,
     ContextConsumer
   },
   mounted() {
     const _scroller = scroller;
-    _scroller.setHeight(4000);
+    _scroller.setHeight(10000);
     this.$nextTick(() => {
       this.bgcolor = { r: 255, g: 255, b: 255 };
     });
@@ -40,7 +42,9 @@ export default {
   methods: {
     setCanvasRef(ref) {
       //アニメーションシーケンス
-      sequence(ref);
+      CanvasSeq(ref);
+      //html
+      // HtmlSeq();
     }
   }
 };

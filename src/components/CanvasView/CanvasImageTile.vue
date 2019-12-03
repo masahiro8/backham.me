@@ -17,7 +17,8 @@ export default {
     return {
       imageData: null,
       canvasData: { width: 300, height: 300 },
-      edge: 300
+      tile: { x: 1, y: 3 },
+      edge: Math.floor(Math.random() * 100) + 200
     };
   },
 
@@ -46,10 +47,16 @@ export default {
       return new Promise(async resolved => {
         this.imageData = await getImage(this.$refs.frame, this.src);
 
+        //タイル数
+        const xy = {
+          x: Math.ceil(window.innerWidth / this.edge),
+          y: Math.ceil(window.innerHeight / this.edge)
+        };
+
         //canvasのサイズを変更
         let size = _.cloneDeep(this.canvasData);
         size.width = window.innerWidth;
-        size.height = window.innerHeight;
+        size.height = this.edge * (xy.y + 1);
         this.canvasData = size;
 
         resolved();
@@ -63,14 +70,26 @@ export default {
         const _width = edge;
         const _height = edge;
 
-        const _left = this.$refs.canvas.width / 2 - _width / 2;
-        const _top = this.$refs.canvas.height / 2 - _height / 2;
+        const xy = {
+          x: Math.ceil(this.$refs.canvas.width / edge),
+          y: Math.ceil(this.$refs.canvas.height / edge)
+        };
 
         //main
         const ctx = this.$refs.canvas.getContext("2d");
         ctx.clearRect(0, 0, this.$refs.canvas.width, this.$refs.canvas.height);
         ctx.save();
-        ctx.drawImage(this.imageData.img, _left, _top, _width, _height);
+        for (let y = 0; y < xy.y; y++) {
+          for (let x = 0; x < xy.x; x++) {
+            ctx.drawImage(
+              this.imageData.img,
+              _width * x,
+              _height * y,
+              _width,
+              _height
+            );
+          }
+        }
         ctx.restore();
         callback();
       });
