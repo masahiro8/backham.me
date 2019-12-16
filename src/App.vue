@@ -3,19 +3,201 @@
     <ContextConsumer :contextKey="['BGCOLOR']" v-slot="{ context }">
       <BackgroundImage :color="bgcolor" />
     </ContextConsumer>
-    <CanvasImage :src="img" @setCanvasRef="setCanvasRef" />
+    <CanvasEffectView :src="img" @setCanvasRef="setCanvasRef" />
+    <CanvasTextView :txts="txts" />
     <HtmlView />
   </div>
 </template>
-
 <script>
-import CanvasImage from "./components/CanvasView/CanvasImage";
+import CanvasEffectView from "./components/CanvasView/CanvasEffectView";
+import CanvasTextView from "./components/CanvasView/CanvasTextView";
 import HtmlView from "./components/HtmlView/HtmlView";
 import BackgroundImage from "./components/CanvasView/BackgroundImage";
 import ContextConsumer from "./context/Context";
 import { scroller } from "./interection/scroll";
-import { CanvasSeq } from "./CanvasSeq";
 import { HtmlSeq } from "./HtmlSeq";
+
+const STYLES = {
+  default: {
+    fontFamily: "robot",
+    fontSize: 48,
+    color: "black",
+    align: "left",
+    letterSpacing: "4px"
+  }
+};
+
+const txts = [
+  {
+    id: 1,
+    from: 100,
+    to: 1000,
+    text: [
+      ({ top, value, diff }) => {
+        return `${value}`;
+      }
+    ],
+    style: { ...STYLES.default, fontSize: 16 },
+    moveTo: {
+      x: 32,
+      y: 32
+    },
+    moveFrom: {
+      x: 32,
+      y: 32
+    },
+    eff: ["SkewedRight"]
+  },
+  {
+    id: 11,
+    from: 1000,
+    to: 1500,
+    text: [
+      ({ top, value, diff }) => {
+        return `${value}`;
+      }
+    ],
+    style: { ...STYLES.default, fontSize: 16 },
+    moveTo: {
+      x: 32,
+      y: 32
+    },
+    moveFrom: {
+      x: 32,
+      y: 32
+    },
+    eff: ["SkewedRightReverse"]
+  },
+  {
+    id: 1001,
+    from: 100,
+    to: 1000,
+    text: [
+      ({ top, value, diff }) => {
+        const now = new Date();
+        return `${now.getUTCDate()}.${now.getUTCMonth()}.${now.getUTCFullYear()}.${now.getUTCHours()}.${now.getUTCMinutes()}.${now.getUTCSeconds()}.${now.getUTCMilliseconds()}`;
+      }
+    ],
+    style: { ...STYLES.default, fontSize: 10 },
+    moveTo: {
+      x: 32,
+      y: 64
+    },
+    moveFrom: {
+      x: 32,
+      y: 64
+    },
+    eff: ["SkewedRight"]
+  },
+  {
+    id: 1002,
+    from: 1000,
+    to: 1200,
+    text: [
+      ({ top, value, diff }) => {
+        const now = new Date();
+        return `${now.getUTCDate()}.${now.getUTCMonth()}.${now.getUTCFullYear()}.${now.getUTCHours()}.${now.getUTCMinutes()}.${now.getUTCSeconds()}.${now.getUTCMilliseconds()}`;
+      }
+    ],
+    style: { ...STYLES.default, fontSize: 10 },
+    moveTo: {
+      x: 32,
+      y: 32
+    },
+    moveFrom: {
+      x: 32,
+      y: 64
+    },
+    eff: []
+  },
+  {
+    id: 1003,
+    from: 1200,
+    to: 3000,
+    text: [
+      ({ top, value, diff }) => {
+        const now = new Date();
+        return `${now.getUTCDate()}.${now.getUTCMonth()}.${now.getUTCFullYear()}.${now.getUTCHours()}.${now.getUTCMinutes()}.${now.getUTCSeconds()}.${now.getUTCMilliseconds()}`;
+      }
+    ],
+    style: { ...STYLES.default, fontSize: 10 },
+    moveTo: {
+      x: 32,
+      y: 32
+    },
+    moveFrom: {
+      x: 32,
+      y: 32
+    },
+    eff: ["SkewedRightReverse"]
+  },
+  {
+    id: 1004,
+    from: 3000,
+    to: 3400,
+    text: [
+      ({ top, value, diff }) => {
+        const now = new Date();
+        return `${now.getUTCDate()}.${now.getUTCMonth()}.${now.getUTCFullYear()}.${now.getUTCHours()}.${now.getUTCMinutes()}.${now.getUTCSeconds()}.${now.getUTCMilliseconds()}`;
+      }
+    ],
+    style: { ...STYLES.default, fontSize: 10 },
+    moveTo: {
+      x: 32,
+      y: 32
+    },
+    moveFrom: {
+      x: 32,
+      y: 32
+    },
+    eff: ["SkewedRightReverse"]
+  },
+  {
+    id: 2,
+    from: 100,
+    to: 1300,
+    text: ["PURPOSE", "PURPOSE - purpose"],
+    style: STYLES.default,
+    moveTo: {
+      x: 200,
+      y: 400
+    },
+    moveFrom: {
+      x: 200,
+      y: 700
+    }
+  },
+  {
+    id: 3,
+    from: 1300,
+    to: 1800,
+    text: ["PURPOSE"],
+    style: STYLES.default,
+    moveTo: {
+      x: 200,
+      y: 350
+    },
+    moveFrom: {
+      x: 200,
+      y: 400
+    }
+  },
+  {
+    id: 4,
+    from: 1800,
+    to: 2200,
+    text: ["PURPOSE", "PURPOSE - purpose"],
+    style: STYLES.default,
+    moveTo: {
+      x: 200,
+      y: -400
+    },
+    moveFrom: {
+      x: 200,
+      y: 350
+    }
+  }
+];
 
 export default {
   name: "app",
@@ -23,11 +205,13 @@ export default {
     return {
       ref: null,
       bgcolor: {},
-      img: require("@/assets/vrmonkey_tran.png")
+      img: require("@/assets/vrmonkey_tran.png"),
+      txts: txts
     };
   },
   components: {
-    CanvasImage,
+    CanvasEffectView,
+    CanvasTextView,
     HtmlView,
     BackgroundImage,
     ContextConsumer
@@ -41,10 +225,8 @@ export default {
   },
   methods: {
     setCanvasRef(ref) {
-      //アニメーションシーケンス
-      CanvasSeq(ref);
       //html
-      // HtmlSeq();
+      HtmlSeq();
     }
   }
 };

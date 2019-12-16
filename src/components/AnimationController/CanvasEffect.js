@@ -1,18 +1,18 @@
 import * as _ from "lodash";
-import { scroller } from "./interection/scroll";
+import { eventProvider } from "../../interection/eventProvider";
 
 //ここからエフェクト
-import { drawImage } from "./components/Effecter/Effects/DrawImage";
-import { colorNoise } from "./components/Effecter/Effects/ColorNoise";
-import { Color } from "./components/Effecter/Effects/Color";
-import { PixelSkewed } from "./components/Effecter/Effects/PixelSkewed";
-import { PixelSkewed8 } from "./components/Effecter/Effects/PixelSkewed8";
-import { LineSkewed } from "./components/Effecter/Effects/LineSkewed";
-import { LineWave } from "./components/Effecter/Effects/LineWave";
-import { Stay } from "./components/Effecter/Effects/Stay";
+import { drawImage } from "../Effecter/Effects/DrawImage";
+import { colorNoise } from "../Effecter/Effects/ColorNoise";
+import { Color } from "../Effecter/Effects/Color";
+import { PixelSkewed } from "../Effecter/Effects/PixelSkewed";
+import { PixelSkewed8 } from "../Effecter/Effects/PixelSkewed8";
+import { LineSkewed } from "../Effecter/Effects/LineSkewed";
+import { LineWave } from "../Effecter/Effects/LineWave";
+import { Stay } from "../Effecter/Effects/Stay";
 
 //スタイル系エフェクト
-import { setStyle } from "./components/Effecter/Effects/Style";
+import { setStyle } from "../Effecter/Effects/Style";
 
 const scale = Math.random(1) + 1;
 
@@ -214,7 +214,7 @@ const events = [
   }
 ];
 
-export const CanvasSeq = ref => {
+export const CanvasEffect = ref => {
   let ctx = ref.getContext("2d");
   let rect = ref.getBoundingClientRect();
   let dst = null;
@@ -237,29 +237,12 @@ export const CanvasSeq = ref => {
   lnWve.init(ctx, ctx, rect, 128);
   sty.init(ctx, ctx, rect, 128);
 
-  //イベントを実行
-  const delivereEvent = _param => {
-    //イベントを検索
-    const _events = _.filter(events, event => {
-      return event.from <= _param.top && event.to > _param.top;
-    });
-
-    //イベントを受け取る
-    _.map(_events, event => {
-      if (event) {
-        const value = _param.top - event.from;
-        //登録イベントを実行
-        const param = { refs: eff, top: _param.top, value: value };
-        event.effect(param);
-      }
-    });
-  };
-
-  //初期値
-  delivereEvent({ top: 1 });
-
-  //スクロールを受け取る
-  scroller.getScroll(_param => {
-    delivereEvent(_param);
+  eventProvider(events, (event, { top, value }) => {
+    const param = {
+      top,
+      value,
+      refs: eff
+    };
+    event.effect(param);
   });
 };

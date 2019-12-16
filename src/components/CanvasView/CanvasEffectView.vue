@@ -5,6 +5,7 @@
 </template>
 <script>
 import * as _ from "lodash";
+import { CanvasEffect } from "../AnimationController/CanvasEffect";
 import { getImage } from "../../util/canvasUtil";
 import { gcd } from "../../util/gcd";
 
@@ -29,7 +30,7 @@ export default {
     this.init();
     await this.resizeCanvas();
     this.setTile(300, () => {
-      this.$emit("setCanvasRef", this.$refs.canvas);
+      CanvasEffect(this.$refs.canvas);
     });
   },
 
