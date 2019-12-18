@@ -1,7 +1,11 @@
 import * as _ from "lodash";
+import { pixelRatio } from "@/config";
+
 export const SkewedRightReverse = (ref, event, { top, value, diff }) => {
   const ctx = ref.getContext("2d");
-  const rect = ref.getBoundingClientRect();
+  let rect = ref.getBoundingClientRect();
+  rect.width = rect.width * pixelRatio;
+  rect.height = rect.height * pixelRatio;
   const src = ctx.getImageData(0, 0, rect.width, rect.height);
   let dst = ctx.createImageData(rect.width, rect.height);
 
@@ -16,17 +20,15 @@ export const SkewedRightReverse = (ref, event, { top, value, diff }) => {
     }
   }
 
+  //1pxスクロールあたりの進行ピクセル数
+  const pixRate = +(rect.width / (event.to - event.from)).toFixed(2);
   let last = [];
-
   let col = [];
   for (let y = 0; y < rect.height; y++) {
     for (let x = rect.width; x > 0; x--) {
       const i = Math.floor(y * (rect.width * 4) + x * 4);
-      if (x > rect.width - value * 0.5 && !last[y]) {
-        dst.data[i] = src.data[i];
-        dst.data[i + 1] = src.data[i + 1];
-        dst.data[i + 2] = src.data[i + 2];
-        dst.data[i + 3] = src.data[i + 3];
+      const edge_index = Math.floor(rect.width - value * pixRate);
+      if (x === edge_index) {
         col[y] = {
           r: src.data[i],
           g: src.data[i + 1],
@@ -34,21 +36,24 @@ export const SkewedRightReverse = (ref, event, { top, value, diff }) => {
           a: src.data[i + 3]
         };
         last[y] = { index: i, x, y };
-      } else {
-        dst.data[i] = col[y].r;
-        dst.data[i + 1] = col[y].g;
-        dst.data[i + 2] = col[y].b;
-        dst.data[i + 3] = col[y].a;
       }
     }
   }
 
-  console.log("last", last);
+  // console.log(
+  //   "SkewedRightReverse1",
+  //   value,
+  //   rect.width - value * 0.5,
+  //   last.length,
+  //   last[64].x,
+  //   event.to - event.from,
+  //   pixRate
+  // );
 
   for (let y = 0; y < rect.height; y++) {
     for (let x = 0; x < rect.width; x++) {
       const i = Math.floor(y * (rect.width * 4) + x * 4);
-      if (last[y].x > x) {
+      if (last[y] && x >= last[y].x) {
         dst.data[i] = col[y].r;
         dst.data[i + 1] = col[y].g;
         dst.data[i + 2] = col[y].b;

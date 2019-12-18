@@ -4,17 +4,18 @@
       class="canvas src"
       ref="src"
       :width="canvasData.width + 'px'"
-      :height="canvasData.height+'px'"
+      :height="canvasData.height + 'px'"
     />
     <canvas
       class="canvas"
       ref="canvas"
       :width="canvasData.width + 'px'"
-      :height="canvasData.height+'px'"
+      :height="canvasData.height + 'px'"
     />
   </div>
 </template>
 <script>
+import { pixelRatio } from "@/config";
 export default {
   data: () => {
     return {
@@ -25,7 +26,7 @@ export default {
     canvasData: {
       type: Object,
       default: () => {
-        return { width: 300, height: 300 };
+        return { width: 0, height: 0 };
       }
     },
     txt: {
@@ -48,6 +49,17 @@ export default {
       handler(newValue) {
         this.$nextTick(() => {
           this.setCanvasRef();
+        });
+      }
+    },
+    canvasData: {
+      immediate: true,
+      handler(newValue) {
+        this.$nextTick(() => {
+          this.$refs.canvas.style.width = `${newValue.width / pixelRatio}px`;
+          this.$refs.canvas.style.height = `${newValue.height / pixelRatio}px`;
+          this.$refs.src.style.width = `${newValue.width / pixelRatio}px`;
+          this.$refs.src.style.height = `${newValue.height / pixelRatio}px`;
         });
       }
     },

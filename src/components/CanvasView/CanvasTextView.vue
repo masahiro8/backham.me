@@ -1,7 +1,7 @@
 <template>
   <div ref="frame" class="canvasText">
     <CanvasTextLayer
-      v-for="(txt,index) in txts"
+      v-for="(txt, index) in txts"
       :key="index"
       :txt="txt"
       :canvasData="canvasData"
@@ -11,6 +11,7 @@
 </template>
 <script>
 import * as _ from "lodash";
+import { pixelRatio } from "@/config";
 import { scroller } from "../../interection/scroll";
 import { CanvasText } from "../AnimationController/CanvasText";
 import CanvasTextLayer from "./CanvasTextLayer";
@@ -19,7 +20,7 @@ export default {
   data: () => {
     return {
       canvasRef: [],
-      canvasData: { width: 300, height: 300 }
+      canvasData: { width: 0, height: 0 }
     };
   },
   components: {
@@ -49,7 +50,8 @@ export default {
           this.canvasRef[id],
           _.filter(this.txts, txt => {
             return txt.id === id;
-          })
+          }),
+          this.canvasData.width
         );
       }
     },
@@ -57,8 +59,8 @@ export default {
       return new Promise(async resolved => {
         //canvasのサイズを変更
         let size = _.cloneDeep(this.canvasData);
-        size.width = window.innerWidth;
-        size.height = window.innerHeight;
+        size.width = window.innerWidth * pixelRatio;
+        size.height = window.innerHeight * pixelRatio;
         this.canvasData = size;
         resolved();
       });

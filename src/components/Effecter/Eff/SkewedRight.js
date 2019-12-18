@@ -1,7 +1,10 @@
 import * as _ from "lodash";
+import { pixelRatio } from "@/config";
 export const SkewedRight = (ref, event, { top, value, diff }) => {
   const ctx = ref.getContext("2d");
-  const rect = ref.getBoundingClientRect();
+  let rect = ref.getBoundingClientRect();
+  rect.width = rect.width * pixelRatio;
+  rect.height = rect.height * pixelRatio;
   const src = ctx.getImageData(0, 0, rect.width, rect.height);
   let dst = ctx.createImageData(rect.width, rect.height);
 
@@ -16,13 +19,14 @@ export const SkewedRight = (ref, event, { top, value, diff }) => {
     }
   }
 
+  //1pxスクロールあたりの進行ピクセル数
+  const pixRate = +(rect.width / (event.to - event.from)).toFixed(2);
   let last = [];
-
   let col = [];
   for (let y = 0; y < rect.height; y++) {
     for (let x = 0; x < rect.width; x++) {
       const i = Math.floor(y * (rect.width * 4) + x * 4);
-      if (x < value * 0.5) {
+      if (x < value * pixRate) {
         dst.data[i] = src.data[i];
         dst.data[i + 1] = src.data[i + 1];
         dst.data[i + 2] = src.data[i + 2];

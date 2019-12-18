@@ -3,7 +3,7 @@
     <ContextConsumer :contextKey="['BGCOLOR']" v-slot="{ context }">
       <BackgroundImage :color="bgcolor" />
     </ContextConsumer>
-    <CanvasEffectView :src="img" @setCanvasRef="setCanvasRef" />
+    <!-- <CanvasEffectView :src="img" @setCanvasRef="setCanvasRef" /> -->
     <CanvasTextView :txts="txts" />
     <HtmlView />
   </div>
@@ -22,180 +22,116 @@ const STYLES = {
     fontFamily: "robot",
     fontSize: 48,
     color: "black",
-    align: "left",
+    align: "center",
     letterSpacing: "4px"
   }
 };
 
+const getNowTime = () => {
+  const now = new Date();
+  return `${now.getUTCDate()}.${now.getUTCMonth()}.${now.getUTCFullYear()}.${now.getUTCHours()}.${now.getUTCMinutes()}.${now.getUTCSeconds()}.${now.getUTCMilliseconds()}`;
+};
+
+const getCenterY = () => {
+  return window.innerHeight / 2 - 23;
+};
+
 const txts = [
   {
-    id: 1,
-    from: 100,
-    to: 1000,
-    text: [
-      ({ top, value, diff }) => {
-        return `${value}`;
-      }
-    ],
-    style: { ...STYLES.default, fontSize: 16 },
-    moveTo: {
-      x: 32,
-      y: 32
-    },
-    moveFrom: {
-      x: 32,
-      y: 32
-    },
-    eff: ["SkewedRight"]
-  },
-  {
-    id: 11,
-    from: 1000,
-    to: 1500,
-    text: [
-      ({ top, value, diff }) => {
-        return `${value}`;
-      }
-    ],
-    style: { ...STYLES.default, fontSize: 16 },
-    moveTo: {
-      x: 32,
-      y: 32
-    },
-    moveFrom: {
-      x: 32,
-      y: 32
-    },
-    eff: ["SkewedRightReverse"]
-  },
-  {
     id: 1001,
-    from: 100,
-    to: 1000,
-    text: [
-      ({ top, value, diff }) => {
-        const now = new Date();
-        return `${now.getUTCDate()}.${now.getUTCMonth()}.${now.getUTCFullYear()}.${now.getUTCHours()}.${now.getUTCMinutes()}.${now.getUTCSeconds()}.${now.getUTCMilliseconds()}`;
-      }
-    ],
-    style: { ...STYLES.default, fontSize: 10 },
+    from: 10,
+    to: 500,
+    text: ["VR/AR"],
+    style: { ...STYLES.default },
     moveTo: {
-      x: 32,
-      y: 64
+      x: 0,
+      y: getCenterY() + 10
     },
     moveFrom: {
-      x: 32,
-      y: 64
+      x: 0,
+      y: getCenterY() + 50
     },
     eff: ["SkewedRight"]
   },
   {
-    id: 1002,
-    from: 1000,
-    to: 1200,
-    text: [
-      ({ top, value, diff }) => {
-        const now = new Date();
-        return `${now.getUTCDate()}.${now.getUTCMonth()}.${now.getUTCFullYear()}.${now.getUTCHours()}.${now.getUTCMinutes()}.${now.getUTCSeconds()}.${now.getUTCMilliseconds()}`;
-      }
-    ],
-    style: { ...STYLES.default, fontSize: 10 },
+    id: 1003,
+    from: 500,
+    to: 1000,
+    text: ["VR/AR"],
+    style: { ...STYLES.default },
     moveTo: {
-      x: 32,
-      y: 32
+      x: 0,
+      y: getCenterY()
     },
     moveFrom: {
-      x: 32,
-      y: 64
+      x: 0,
+      y: getCenterY() + 10
     },
     eff: []
   },
   {
-    id: 1003,
-    from: 1200,
-    to: 3000,
-    text: [
-      ({ top, value, diff }) => {
-        const now = new Date();
-        return `${now.getUTCDate()}.${now.getUTCMonth()}.${now.getUTCFullYear()}.${now.getUTCHours()}.${now.getUTCMinutes()}.${now.getUTCSeconds()}.${now.getUTCMilliseconds()}`;
-      }
-    ],
-    style: { ...STYLES.default, fontSize: 10 },
-    moveTo: {
-      x: 32,
-      y: 32
-    },
-    moveFrom: {
-      x: 32,
-      y: 32
-    },
-    eff: ["SkewedRightReverse"]
-  },
-  {
     id: 1004,
-    from: 3000,
-    to: 3400,
-    text: [
-      ({ top, value, diff }) => {
-        const now = new Date();
-        return `${now.getUTCDate()}.${now.getUTCMonth()}.${now.getUTCFullYear()}.${now.getUTCHours()}.${now.getUTCMinutes()}.${now.getUTCSeconds()}.${now.getUTCMilliseconds()}`;
-      }
-    ],
-    style: { ...STYLES.default, fontSize: 10 },
+    from: 1000,
+    to: 1500,
+    text: ["VR/AR"],
+    style: { ...STYLES.default },
     moveTo: {
-      x: 32,
-      y: 32
+      x: 0,
+      y: getCenterY() - 150
     },
     moveFrom: {
-      x: 32,
-      y: 32
+      x: 0,
+      y: getCenterY()
     },
     eff: ["SkewedRightReverse"]
   },
   {
     id: 2,
-    from: 100,
-    to: 1300,
-    text: ["PURPOSE", "PURPOSE - purpose"],
+    from: 2000,
+    to: 3500,
+    text: ["BACKHAM"],
     style: STYLES.default,
     moveTo: {
-      x: 200,
-      y: 400
+      x: 0,
+      y: getCenterY() + 10
     },
     moveFrom: {
-      x: 200,
-      y: 700
-    }
+      x: 0,
+      y: getCenterY() + 50
+    },
+    eff: ["SkewedRight"]
   },
   {
     id: 3,
-    from: 1300,
-    to: 1800,
-    text: ["PURPOSE"],
+    from: 3500,
+    to: 4500,
+    text: ["BACKHAM"],
     style: STYLES.default,
     moveTo: {
-      x: 200,
-      y: 350
+      x: 0,
+      y: getCenterY()
     },
     moveFrom: {
-      x: 200,
-      y: 400
-    }
+      x: 0,
+      y: getCenterY() + 10
+    },
+    eff: []
   },
   {
     id: 4,
-    from: 1800,
-    to: 2200,
-    text: ["PURPOSE", "PURPOSE - purpose"],
+    from: 4500,
+    to: 6000,
+    text: ["BACKHAM"],
     style: STYLES.default,
     moveTo: {
-      x: 200,
-      y: -400
+      x: 0,
+      y: getCenterY() - 150
     },
     moveFrom: {
-      x: 200,
-      y: 350
-    }
+      x: 0,
+      y: getCenterY()
+    },
+    eff: ["SkewedRightReverse"]
   }
 ];
 
@@ -210,7 +146,7 @@ export default {
     };
   },
   components: {
-    CanvasEffectView,
+    // CanvasEffectView,
     CanvasTextView,
     HtmlView,
     BackgroundImage,
@@ -233,15 +169,20 @@ export default {
 </script>
 
 <style lang="scss">
+html,
 body {
+  height: 100%;
+  overflow: scroll;
   margin: 0;
   padding: 0;
 }
+
 #app {
   position: fixed;
   top: 0;
+  bottom: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
+  right: 0;
+  overflow: auto;
 }
 </style>
