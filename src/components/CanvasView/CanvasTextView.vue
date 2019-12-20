@@ -20,6 +20,7 @@ export default {
   data: () => {
     return {
       canvasRef: [],
+      srcRef: [],
       canvasData: { width: 0, height: 0 }
     };
   },
@@ -43,11 +44,14 @@ export default {
         timer = setTimeout(() => {}, 300);
       });
     },
-    setCanvasRef({ id, ref }) {
-      if (id && ref) {
+    setCanvasRef({ id, ref, srcRef }) {
+      // console.log("CanvasText", ref, srcRef);
+      if (id && ref && srcRef) {
         this.canvasRef[id] = ref;
+        this.srcRef[id] = srcRef;
         CanvasText(
           this.canvasRef[id],
+          this.srcRef[id],
           _.filter(this.txts, txt => {
             return txt.id === id;
           }),

@@ -1,12 +1,12 @@
 import * as _ from "lodash";
 import { pixelRatio } from "@/config";
-export const SkewedRight = (ref, event, { top, value, diff }) => {
-  const ctx = ref.getContext("2d");
-  let rect = ref.getBoundingClientRect();
+export const SkewedRight = (ref, srcRef, event, { top, value, diff }) => {
+  const ctxSrc = srcRef.getContext("2d");
+  const rect = srcRef.getBoundingClientRect();
   rect.width = rect.width * pixelRatio;
   rect.height = rect.height * pixelRatio;
-  const src = ctx.getImageData(0, 0, rect.width, rect.height);
-  let dst = ctx.createImageData(rect.width, rect.height);
+  const src = ctxSrc.getImageData(0, 0, rect.width, rect.height);
+  let dst = ctxSrc.createImageData(rect.width, rect.height);
 
   //コピー
   for (let y = 0; y < rect.height; y++) {
@@ -46,5 +46,17 @@ export const SkewedRight = (ref, event, { top, value, diff }) => {
     }
   }
 
-  ctx.putImageData(dst, rect.x, rect.y);
+  ctxSrc.putImageData(dst, rect.x, rect.y);
+  const ctx = ref.getContext("2d");
+  ctx.drawImage(
+    srcRef,
+    0,
+    0,
+    rect.width,
+    rect.height,
+    0,
+    0,
+    rect.width,
+    rect.height
+  );
 };

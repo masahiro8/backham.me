@@ -9,6 +9,7 @@
   </div>
 </template>
 <script>
+import * as _ from "lodash";
 import CanvasEffectView from "./components/CanvasView/CanvasEffectView";
 import CanvasTextView from "./components/CanvasView/CanvasTextView";
 import HtmlView from "./components/HtmlView/HtmlView";
@@ -18,7 +19,7 @@ import { scroller } from "./interection/scroll";
 import { HtmlSeq } from "./HtmlSeq";
 
 const STYLES = {
-  default: {
+  DEFAULT: {
     fontFamily: "robot",
     fontSize: 48,
     color: "black",
@@ -36,101 +37,122 @@ const getCenterY = () => {
   return window.innerHeight / 2 - 23;
 };
 
+const getRandomId = () => {
+  return _.random(9999999999);
+};
+
+const TEXTS = {
+  OPEN1: ["VR/AR"],
+  OPEN2: ["Design &", "Implement"],
+  OPEN3: ["Play with", "yourself !"]
+};
+
+const MOVES = {
+  CENTER: {
+    FADEIN: {
+      TO: { x: 0, y: getCenterY() + 10 },
+      FROM: { x: 0, y: getCenterY() + 50 }
+    },
+    STAY: {
+      TO: { x: 0, y: getCenterY() },
+      FROM: { x: 0, y: getCenterY() + 10 }
+    },
+    FADEOUT: {
+      TO: { x: 0, y: getCenterY() - 150 },
+      FROM: { x: 0, y: getCenterY() }
+    }
+  }
+};
+
 const txts = [
   {
-    id: 1001,
+    id: getRandomId(),
     from: 10,
     to: 500,
-    text: ["VR/AR"],
-    style: { ...STYLES.default },
-    moveTo: {
-      x: 0,
-      y: getCenterY() + 10
-    },
-    moveFrom: {
-      x: 0,
-      y: getCenterY() + 50
-    },
+    text: TEXTS.OPEN1,
+    style: { ...STYLES.DEFAULT },
+    moveTo: MOVES.CENTER.FADEIN.TO,
+    moveFrom: MOVES.CENTER.FADEIN.FROM,
     eff: ["SkewedRight"]
   },
   {
-    id: 1003,
+    id: getRandomId(),
     from: 500,
     to: 1000,
-    text: ["VR/AR"],
-    style: { ...STYLES.default },
-    moveTo: {
-      x: 0,
-      y: getCenterY()
-    },
-    moveFrom: {
-      x: 0,
-      y: getCenterY() + 10
-    },
-    eff: []
+    text: TEXTS.OPEN1,
+    style: { ...STYLES.DEFAULT },
+    moveTo: MOVES.CENTER.STAY.TO,
+    moveFrom: MOVES.CENTER.STAY.FROM,
+    eff: ["Stay"]
   },
   {
-    id: 1004,
+    id: getRandomId(),
     from: 1000,
     to: 1500,
-    text: ["VR/AR"],
-    style: { ...STYLES.default },
-    moveTo: {
-      x: 0,
-      y: getCenterY() - 150
-    },
-    moveFrom: {
-      x: 0,
-      y: getCenterY()
-    },
+    text: TEXTS.OPEN1,
+    style: { ...STYLES.DEFAULT },
+    moveTo: MOVES.CENTER.FADEOUT.TO,
+    moveFrom: MOVES.CENTER.FADEOUT.FROM,
     eff: ["SkewedRightReverse"]
   },
   {
-    id: 2,
-    from: 2000,
-    to: 3500,
-    text: ["BACKHAM"],
-    style: STYLES.default,
-    moveTo: {
-      x: 0,
-      y: getCenterY() + 10
-    },
-    moveFrom: {
-      x: 0,
-      y: getCenterY() + 50
-    },
+    id: getRandomId(),
+    from: 700,
+    to: 2500,
+    text: TEXTS.OPEN2,
+    style: STYLES.DEFAULT,
+    moveTo: MOVES.CENTER.FADEIN.TO,
+    moveFrom: MOVES.CENTER.FADEIN.FROM,
     eff: ["SkewedRight"]
   },
   {
-    id: 3,
-    from: 3500,
-    to: 4500,
-    text: ["BACKHAM"],
-    style: STYLES.default,
-    moveTo: {
-      x: 0,
-      y: getCenterY()
-    },
-    moveFrom: {
-      x: 0,
-      y: getCenterY() + 10
-    },
-    eff: []
+    id: getRandomId(),
+    from: 2500,
+    to: 3500,
+    text: TEXTS.OPEN2,
+    style: STYLES.DEFAULT,
+    moveTo: MOVES.CENTER.STAY.TO,
+    moveFrom: MOVES.CENTER.STAY.FROM,
+    eff: ["Stay"]
   },
   {
-    id: 4,
-    from: 4500,
+    id: getRandomId(),
+    from: 3500,
+    to: 5000,
+    text: TEXTS.OPEN2,
+    style: STYLES.DEFAULT,
+    moveTo: MOVES.CENTER.FADEOUT.TO,
+    moveFrom: MOVES.CENTER.FADEOUT.FROM,
+    eff: ["SkewedRightReverse"]
+  },
+  {
+    id: getRandomId(),
+    from: 4000,
+    to: 5500,
+    text: TEXTS.OPEN3,
+    style: STYLES.DEFAULT,
+    moveTo: MOVES.CENTER.FADEIN.TO,
+    moveFrom: MOVES.CENTER.FADEIN.FROM,
+    eff: ["SkewedRight"]
+  },
+  {
+    id: getRandomId(),
+    from: 5500,
     to: 6000,
-    text: ["BACKHAM"],
-    style: STYLES.default,
-    moveTo: {
-      x: 0,
-      y: getCenterY() - 150
-    },
-    moveFrom: {
-      x: 0,
-      y: getCenterY()
-    },
+    text: TEXTS.OPEN3,
+    style: STYLES.DEFAULT,
+    moveTo: MOVES.CENTER.STAY.TO,
+    moveFrom: MOVES.CENTER.STAY.FROM,
+    eff: ["Stay"]
+  },
+  {
+    id: getRandomId(),
+    from: 6000,
+    to: 7500,
+    text: TEXTS.OPEN3,
+    style: STYLES.DEFAULT,
+    moveTo: MOVES.CENTER.FADEOUT.TO,
+    moveFrom: MOVES.CENTER.FADEOUT.FROM,
     eff: ["SkewedRightReverse"]
   }
 ];

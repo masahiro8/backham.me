@@ -37,8 +37,17 @@ export default {
   methods: {
     init() {},
     setCanvasRef() {
-      if (this.txt.id && this.$refs.canvas && !this.refsFlag) {
-        this.$emit("setCanvasRef", { id: this.txt.id, ref: this.$refs.canvas });
+      if (
+        this.txt.id &&
+        this.$refs.canvas &&
+        this.$refs.src &&
+        !this.refsFlag
+      ) {
+        this.$emit("setCanvasRef", {
+          id: this.txt.id,
+          ref: this.$refs.canvas,
+          srcRef: this.$refs.src
+        });
         this.refsFlag = true;
       }
     }
@@ -81,6 +90,7 @@ canvas {
   left: 0;
   top: 0;
   mix-blend-mode: difference;
+  visibility: visible;
 }
 .src {
   visibility: hidden;
