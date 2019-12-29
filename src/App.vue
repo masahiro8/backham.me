@@ -4,7 +4,7 @@
       <BackgroundImage :color="bgcolor" />
     </ContextConsumer>
     <!-- <CanvasEffectView :src="img" @setCanvasRef="setCanvasRef" /> -->
-    <CanvasTextView :txts="txts" />
+    <CanvasTextView :txts="txts" :imgs="imgs" />
     <HtmlView />
   </div>
 </template>
@@ -38,13 +38,26 @@ const getCenterY = () => {
 };
 
 const getRandomId = () => {
-  return _.random(9999999999);
+  return _.random(9999999999) + _.uniq();
 };
 
-const TEXTS = {
-  OPEN1: ["VR/AR"],
-  OPEN2: ["Design &", "Implement"],
-  OPEN3: ["Play with", "yourself !"]
+const CONTENTS_TYPE = {
+  TEXT: "text",
+  IMAGE: "image"
+};
+
+const CONTENTS = {
+  OPEN1: { type: CONTENTS_TYPE.TEXT, value: ["VR/AR"], style: STYLES.DEFAULT },
+  OPEN2: {
+    type: CONTENTS_TYPE.TEXT,
+    value: ["Design &", "Implement"],
+    style: STYLES.DEFAULT
+  },
+  OPEN3: {
+    type: CONTENTS_TYPE.TEXT,
+    value: ["BACKHAM"],
+    style: _.assign(STYLES.DEFAULT, { fontSize: 48 })
+  }
 };
 
 const MOVES = {
@@ -64,13 +77,46 @@ const MOVES = {
   }
 };
 
+const imgs = [
+  {
+    id: getRandomId(),
+    from: 3500,
+    to: 4000,
+    img: "/images/vrmonkey_tran.png",
+    rect: { x: "auto", y: "auto", width: 300, height: "auto" },
+    moveTo: { x: 0, y: getCenterY() - 50 },
+    moveFrom: MOVES.CENTER.FADEIN.FROM,
+    eff: ["SkewedRight"]
+  },
+  {
+    id: getRandomId(),
+    from: 4000,
+    to: 5000,
+    img: "/images/vrmonkey_tran.png",
+    rect: { x: "auto", y: "auto", width: 300, height: "auto" },
+    moveTo: { x: 0, y: getCenterY() - 80 },
+    moveFrom: { x: 0, y: getCenterY() - 50 },
+    eff: ["Stay"]
+  },
+  {
+    id: getRandomId(),
+    from: 5000,
+    to: 5500,
+    img: "/images/vrmonkey_tran.png",
+    rect: { x: "auto", y: "auto", width: 300, height: "auto" },
+    moveTo: { x: 0, y: getCenterY() - 200 },
+    moveFrom: { x: 0, y: getCenterY() - 80 },
+    eff: ["SkewedRightReverse"]
+  }
+];
+
 const txts = [
   {
     id: getRandomId(),
     from: 10,
     to: 500,
-    text: TEXTS.OPEN1,
-    style: { ...STYLES.DEFAULT },
+    text: CONTENTS.OPEN1.value,
+    style: CONTENTS.OPEN1.style,
     moveTo: MOVES.CENTER.FADEIN.TO,
     moveFrom: MOVES.CENTER.FADEIN.FROM,
     eff: ["SkewedRight"]
@@ -79,8 +125,8 @@ const txts = [
     id: getRandomId(),
     from: 500,
     to: 1000,
-    text: TEXTS.OPEN1,
-    style: { ...STYLES.DEFAULT },
+    text: CONTENTS.OPEN1.value,
+    style: CONTENTS.OPEN1.style,
     moveTo: MOVES.CENTER.STAY.TO,
     moveFrom: MOVES.CENTER.STAY.FROM,
     eff: ["Stay"]
@@ -89,8 +135,8 @@ const txts = [
     id: getRandomId(),
     from: 1000,
     to: 1500,
-    text: TEXTS.OPEN1,
-    style: { ...STYLES.DEFAULT },
+    text: CONTENTS.OPEN1.value,
+    style: CONTENTS.OPEN1.style,
     moveTo: MOVES.CENTER.FADEOUT.TO,
     moveFrom: MOVES.CENTER.FADEOUT.FROM,
     eff: ["SkewedRightReverse"]
@@ -99,8 +145,8 @@ const txts = [
     id: getRandomId(),
     from: 700,
     to: 2500,
-    text: TEXTS.OPEN2,
-    style: STYLES.DEFAULT,
+    text: CONTENTS.OPEN2.value,
+    style: CONTENTS.OPEN2.style,
     moveTo: MOVES.CENTER.FADEIN.TO,
     moveFrom: MOVES.CENTER.FADEIN.FROM,
     eff: ["SkewedRight"]
@@ -109,8 +155,8 @@ const txts = [
     id: getRandomId(),
     from: 2500,
     to: 3500,
-    text: TEXTS.OPEN2,
-    style: STYLES.DEFAULT,
+    text: CONTENTS.OPEN2.value,
+    style: CONTENTS.OPEN2.style,
     moveTo: MOVES.CENTER.STAY.TO,
     moveFrom: MOVES.CENTER.STAY.FROM,
     eff: ["Stay"]
@@ -119,38 +165,38 @@ const txts = [
     id: getRandomId(),
     from: 3500,
     to: 5000,
-    text: TEXTS.OPEN2,
-    style: STYLES.DEFAULT,
+    text: CONTENTS.OPEN2.value,
+    style: CONTENTS.OPEN2.style,
     moveTo: MOVES.CENTER.FADEOUT.TO,
     moveFrom: MOVES.CENTER.FADEOUT.FROM,
     eff: ["SkewedRightReverse"]
   },
   {
     id: getRandomId(),
-    from: 4000,
-    to: 5500,
-    text: TEXTS.OPEN3,
-    style: STYLES.DEFAULT,
+    from: 5500,
+    to: 6000,
+    text: CONTENTS.OPEN3.value,
+    style: CONTENTS.OPEN3.style,
     moveTo: MOVES.CENTER.FADEIN.TO,
     moveFrom: MOVES.CENTER.FADEIN.FROM,
     eff: ["SkewedRight"]
   },
   {
     id: getRandomId(),
-    from: 5500,
-    to: 6000,
-    text: TEXTS.OPEN3,
-    style: STYLES.DEFAULT,
+    from: 6000,
+    to: 7000,
+    text: CONTENTS.OPEN3.value,
+    style: CONTENTS.OPEN3.style,
     moveTo: MOVES.CENTER.STAY.TO,
     moveFrom: MOVES.CENTER.STAY.FROM,
     eff: ["Stay"]
   },
   {
     id: getRandomId(),
-    from: 6000,
-    to: 7500,
-    text: TEXTS.OPEN3,
-    style: STYLES.DEFAULT,
+    from: 7000,
+    to: 8500,
+    text: CONTENTS.OPEN3.value,
+    style: CONTENTS.OPEN3.style,
     moveTo: MOVES.CENTER.FADEOUT.TO,
     moveFrom: MOVES.CENTER.FADEOUT.FROM,
     eff: ["SkewedRightReverse"]
@@ -164,7 +210,8 @@ export default {
       ref: null,
       bgcolor: {},
       img: require("@/assets/vrmonkey_tran.png"),
-      txts: txts
+      txts: txts,
+      imgs: imgs
     };
   },
   components: {

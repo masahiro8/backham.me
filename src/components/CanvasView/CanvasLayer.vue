@@ -1,11 +1,13 @@
 <template>
   <div>
+    <!-- 描画する元のキャンバス -->
     <canvas
       class="canvas src"
       ref="src"
       :width="canvasData.width + 'px'"
       :height="canvasData.height + 'px'"
     />
+    <!-- エフェクト描画用のキャンバス -->
     <canvas
       class="canvas"
       ref="canvas"
@@ -29,7 +31,7 @@ export default {
         return { width: 0, height: 0 };
       }
     },
-    txt: {
+    item: {
       type: Object
     }
   },
@@ -38,13 +40,13 @@ export default {
     init() {},
     setCanvasRef() {
       if (
-        this.txt.id &&
+        this.item.id &&
         this.$refs.canvas &&
         this.$refs.src &&
         !this.refsFlag
       ) {
         this.$emit("setCanvasRef", {
-          id: this.txt.id,
+          id: this.item.id,
           ref: this.$refs.canvas,
           srcRef: this.$refs.src
         });
@@ -53,7 +55,7 @@ export default {
     }
   },
   watch: {
-    txt: {
+    item: {
       immediate: true,
       handler(newValue) {
         this.$nextTick(() => {

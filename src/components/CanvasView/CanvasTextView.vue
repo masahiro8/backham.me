@@ -1,11 +1,21 @@
 <template>
   <div ref="frame" class="canvasText">
+    <!-- 描画キャンバス -->
     <CanvasTextLayer
-      v-for="(txt, index) in txts"
-      :key="index"
-      :txt="txt"
+      v-for="txt in txts"
+      :key="txt.id"
+      :item="txt"
       :canvasData="canvasData"
+      class="ref-text"
       @setCanvasRef="setCanvasRef"
+    />
+    <CanvasImageLayer
+      v-for="img in imgs"
+      :key="img.id"
+      :item="img"
+      :canvasData="canvasData"
+      class="ref-image"
+      @setCanvasRef="setCanvasImageRef"
     />
   </div>
 </template>
@@ -14,7 +24,9 @@ import * as _ from "lodash";
 import { pixelRatio } from "@/config";
 import { scroller } from "../../interection/scroll";
 import { CanvasText } from "../AnimationController/CanvasText";
-import CanvasTextLayer from "./CanvasTextLayer";
+import { CanvasImage } from "../AnimationController/CanvasImage";
+import CanvasTextLayer from "./CanvasLayer";
+import CanvasImageLayer from "./CanvasLayer";
 
 export default {
   data: () => {
@@ -25,7 +37,8 @@ export default {
     };
   },
   components: {
-    CanvasTextLayer
+    CanvasTextLayer,
+    CanvasImageLayer
   },
   async mounted() {
     this.init();
@@ -34,6 +47,12 @@ export default {
   props: {
     txts: {
       type: Array
+    },
+    imgs: {
+      type: Array,
+      default: () => {
+        return [];
+      }
     }
   },
   methods: {
@@ -49,14 +68,41 @@ export default {
       if (id && ref && srcRef) {
         this.canvasRef[id] = ref;
         this.srcRef[id] = srcRef;
-        CanvasText(
-          this.canvasRef[id],
-          this.srcRef[id],
-          _.filter(this.txts, txt => {
-            return txt.id === id;
-          }),
-          this.canvasData.width
-        );
+
+        const txt = _.filter(this.txts, txt => {
+          return txt.id === id;
+        });
+
+        // console.log("txt", id, txt);
+        //キャンバスに文字を描画
+        if (txt && txt.length) {
+          CanvasText(
+            this.canvasRef[id],
+            this.srcRef[id],
+            txt,
+            this.canvasData.width
+          );
+        }
+      }
+    },
+    setCanvasImageRef({ id, ref, srcRef }) {
+      // console.log("CanvasText", ref, srcRef);
+      if (id && ref && srcRef) {
+        this.canvasRef[id] = ref;
+        this.srcRef[id] = srcRef;
+
+        const img = _.filter(this.imgs, img => {
+          return img.id === id;
+        });
+        console.log("img", id, img);
+        if (img && img.length) {
+          CanvasImage(
+            this.canvasRef[id],
+            this.srcRef[id],
+            img,
+            this.canvasData.width
+          );
+        }
       }
     },
     resizeCanvas() {
